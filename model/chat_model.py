@@ -55,7 +55,10 @@ def get_chat_rooms(user: User):
     for r in rooms:
         data["rooms"].append({
             "id" : r.id,
-            "with_user" : r.petani.user.id if customer else r.customer.user.id
+            "with_user" : r.petani.user.id if customer else r.customer.user.id,
+            "first_name" : r.petani.user.first_name if customer else r.customer.user.first_name,
+            "last_name" : r.petani.user.last_name if customer else r.customer.user.last_name,
+            "profile_pic" : r.petani.user.profile_pic if customer else r.customer.user.profile_pic
         })
 
     return data
