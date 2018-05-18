@@ -170,7 +170,8 @@ def get_order_lines(user: User):
             },
             "qty" : s.qty,
             "price" : s.qty * order_line.product.harga,
-            "status" : order_line.status
+            "status" : order_line.status,
+            "date" : s.createdAt
         })
 
     return data

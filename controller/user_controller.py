@@ -135,3 +135,11 @@ class UserController(Controller):
         }
 
         return data
+
+    def profile_user(self):
+        user = self.is_logged_in()
+
+        if not user:
+            raise Exception("Unexpected login status")
+
+
