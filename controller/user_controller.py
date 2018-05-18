@@ -1,5 +1,6 @@
 from controller.base_controller import Controller
 from model.user_model import login_petani, login_customer, register_customer, register_petani, edit_profile_customer, edit_profile_petani
+from smart_contract.account_kultiva import create_account
 
 class UserController(Controller):
     def login_status(self):
@@ -53,6 +54,7 @@ class UserController(Controller):
         if self.is_logged_in():
             raise Exception("Unexpected login status")
 
+        m, secret, public = create_account()
         session = register_petani(
             self.first_name,
             self.last_name,
@@ -61,6 +63,8 @@ class UserController(Controller):
             self.lat,
             self.lng
         )
+        session.user.public_key = public
+        session.user.save()
 
         for p in session.user.petani:
             petani = p
@@ -71,7 +75,8 @@ class UserController(Controller):
             "last_name" : session.user.last_name,
             "phone" : petani.phone,
             "public_key" : session.user.public_key,
-            "session_id" : session.session_id
+            "session_id" : session.session_id,
+            "mnemonic" : m
         }
 
         return data
@@ -79,6 +84,8 @@ class UserController(Controller):
     def register_customer(self):
         if self.is_logged_in():
             raise Exception("Unexpected login status")
+
+        m, secret, public = create_account()
 
         session = register_customer(
             self.first_name,
@@ -91,12 +98,16 @@ class UserController(Controller):
             customer = c
             break
 
+        session.user.public_key = public
+        session.user.save()
+
         data = {
             "first_name" : session.user.first_name,
             "last_name" : session.user.last_name,
             "email" : customer.email,
             "public_key" : session.user.public_key,
-            "session_id" : session.session_id
+            "session_id" : session.session_id,
+            "mnemonic" : m
         }
 
         return data
