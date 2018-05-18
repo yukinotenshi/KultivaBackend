@@ -136,10 +136,40 @@ class UserController(Controller):
 
         return data
 
-    def profile_user(self):
+    def profile_customer(self):
         user = self.is_logged_in()
 
         if not user:
             raise Exception("Unexpected login status")
 
+        for c in user.customer:
+            customer = c
+            break
 
+        data = {
+            "id" : user.id,
+            "first_name" : user.first_name,
+            "last_name" : user.last_name,
+            "email" : customer.email
+        }
+
+        return data
+
+    def profile_petani(self):
+        user = self.is_logged_in()
+
+        if not user:
+            raise Exception("Unexpected login status")
+
+        for c in user.petani:
+            petani = c
+            break
+
+        data = {
+            "id" : user.id,
+            "first_name" : user.first_name,
+            "last_name" : user.last_name,
+            "phone" : petani.phone
+        }
+
+        return data
