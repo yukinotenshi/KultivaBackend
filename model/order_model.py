@@ -1,4 +1,4 @@
-from model.base_model import Order, OrderLine, Supplier, Customer, User, Product, Capabilities, ChatRoom
+from model.base_model import Order, OrderLine, Supplier, Customer, User, Product, Capabilities, ChatRoom, Contract
 from datetime import date, timedelta
 from operator import itemgetter
 from smart_contract.contract_kultiva import *
@@ -61,10 +61,6 @@ def create_order(user : User, address : str, items):
     if balance < price:
         raise Exception("Balance not sufficient")
 
-    '''
-    DO YOUR FUCKING BLOCKCHAIN THINGS HERE
-    ex. deduct balance, transfer to contract, etc/.
-    '''
     order = Order(
         customer = customer,
         address = address
@@ -114,6 +110,7 @@ def set_order_line(product_id : int, qty : float, order : Order, mnemonic):
     qty_left = qty
 
     list_amount = []
+    list_supplier = []
 
     for c in caps:
         supplier = Supplier(
@@ -121,6 +118,7 @@ def set_order_line(product_id : int, qty : float, order : Order, mnemonic):
             petani = c.petani,
             qty = c.volume if c.volume < qty_left else qty_left
         )
+        list_supplier.append(supplier)
         list_amount.append(qty * product.harga)
         supplier.save()
         c.volume = c.volume - supplier.qty
@@ -139,6 +137,17 @@ def set_order_line(product_id : int, qty : float, order : Order, mnemonic):
     list_pub_petani = [c.petani.user.public_key for c in caps]
     add_signer_petani(list_escrow, list_pub_petani)
 
+    for i in range(list_escrow):
+        contract = Contract(
+            escrow_pub = list_escrow[i][0],
+            escrow_secret = list_escrow[i][1],
+            escrow_mnemonic = list_escrow[i][2],
+            supplier = list_supplier[i],
+            customer = order.customer
+        )
+        contract.save()
+
+
 
 def get_order_lines(user: User):
     for p in user.petani:
@@ -152,14 +161,15 @@ def get_order_lines(user: User):
     for s in supplied:
         order_line = s.order_line
         data["order_lines"].append({
-            "id" : order_line.id,
+            "id" : s.id,
             "customer" : {
                 "id" : order_line.order.customer.id,
-                "first_name" : order_line.order.customer.first_name,
-                "last_name" : order_line.order.customer.last_name,
+                "first_name" : order_line.order.customer.user.first_name,
+                "last_name" : order_line.order.customer.user.last_name,
                 "address" : order_line.order.address
             },
             "qty" : s.qty,
+            "price" : s.qty * order_line.product.harga,
             "status" : s.status
         })
 

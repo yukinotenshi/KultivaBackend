@@ -130,3 +130,14 @@ class Chat(BaseModel):
 
     class Meta:
         db_table = "chat"
+
+
+class Contract(BaseModel):
+    supplier = pw.ForeignKeyField(Supplier, related_name="contract")
+    customer = pw.ForeignKeyField(Customer, related_name="contract")
+    escrow_pub = pw.CharField()
+    escrow_secret = pw.CharField()
+    escrow_mnemonic = pw.CharField()
+
+    class Meta:
+        db_table = "contract"

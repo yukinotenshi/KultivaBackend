@@ -1,6 +1,9 @@
 from controller.base_controller import Controller
 import model.order_model as m
-from model.base_model import Order
+from model.base_model import Order, Supplier, Contract, Petani
+from smart_contract.contract_kultiva import *
+from smart_contract.account_kultiva import *
+
 
 class OrderController(Controller):
     def create_order(self):
@@ -71,3 +74,39 @@ class OrderController(Controller):
 
         return m.get_order_lines(user)
 
+
+    def sign_petani(self):
+        user = self.is_logged_in()
+        if not user:
+            raise Exception("Unexpected login status")
+
+        supplier = Supplier.get(Supplier.id == self.id)
+        keypair = Keypair.deterministic(self.mnemonic)
+        contract = Contract.get(Contract.supplier == supplier)
+
+        add_signer_user(keypair, contract.escrow_pub, contract.customer.user.public_key)
+
+        return {
+            "status" : "success",
+            "id" : self.id
+        }
+
+    def sign_customer(self):
+        user = self.is_logged_in()
+        if not user:
+            raise Exception("Unexpected login status")
+
+        petani = Petani.get(Petani.id == self.petani_id)
+        supplier = Supplier.get(Supplier.petani == self.petani_id, Supplier.order_line == self.order_line_id)
+        keypair = Keypair.deterministic(self.mnemonic)
+        contract = Contract.get(Contract.supplier == supplier)
+
+        fund_petani(keypair,
+                    contract.escrow_pub,
+                    petani.user.public_key,
+                    supplier.qty * supplier.order_line.product.harga)
+
+        keypair_escrow = Keypair.deterministic(contract.escrow_mnemonic)
+        remove_escrow(keypair_escrow, DIST_PUB)
+
+        contract.delete_instance()
