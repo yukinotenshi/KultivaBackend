@@ -9,7 +9,12 @@ migrator = SqliteMigrator(db)
 status = pw.IntegerField(default=0)
 migrate(
     migrator.add_column("order_line", 'status', status)
-)'''
+)
 db.drop_tables([Chat])
-db.create_tables([Chat])
+db.create_tables([Chat])'''
+migrator = SqliteMigrator(db)
+image = pw.TextField(default='')
+migrate(
+    migrator.add_column('product', 'image', image)
+)
 db.close()

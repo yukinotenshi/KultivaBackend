@@ -68,6 +68,7 @@ class Product(BaseModel):
     name = pw.CharField()
     harga = pw.IntegerField()
     unit = pw.CharField()
+    image = pw.TextField(default='')
 
     class Meta:
         db_table = "product"
