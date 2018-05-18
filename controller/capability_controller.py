@@ -24,7 +24,10 @@ class CapabilityController(Controller):
                 "volume" : c.volume,
                 "start_date" : c.start_date,
                 "end_date" : c.end_date,
-                "product" : c.product.id
+                "product_id" : c.product.id,
+                "product_name" : c.product.name,
+                "product_image" : c.product.image,
+                "product_price" : c.product.harga
             })
 
 
