@@ -130,10 +130,12 @@ def set_order_line(product_id : int, qty : float, order : Order, mnemonic):
         qty_left -= supplier.qty
 
     # Phase 1 and 2
+    print("Phase 1")
     list_escrow = create_and_fund(mnemonic, len(caps), list_amount)
     # Phase 3
     # Set options signer petani
     # Get public key petani
+    print("phase 3")
     list_pub_petani = [c.petani.user.public_key for c in caps]
     add_signer_petani(list_escrow, list_pub_petani)
 
