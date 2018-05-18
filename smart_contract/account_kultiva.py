@@ -58,21 +58,9 @@ def add_fund_bot(public_key):
     requests.get('https://friendbot.stellar.org/?addr=' + public_key)
 
 
-# Create account with funded money + trust
-def create_account():
-    # Create key and add fund
-    m, kp = generate_key()
-    public = kp.address().decode()
-    secret = kp.seed().decode()
-    add_fund_bot(public)
-    # Change the trust
-    change_trust(kp, KLTV, 100000000)
-    # Return it
-    return m, secret, public
-
-
 # Get balance from the account
 def get_balance(pub_key):
     _address = Address(address=pub_key)
     _address.get()
-    return _address.balances
+    print(_address.balances)
+    return _address.balances[0]['balance']

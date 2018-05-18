@@ -182,3 +182,16 @@ def merge_account(source, pub_destination):
     # Create Transaction
     resp = create_tx(pub_source, source, sequence, msg, [merge])
     print(resp)
+
+# Create account with funded money + trust
+def create_account():
+    # Create key and add fund
+    m, kp = generate_key()
+    public = kp.address().decode()
+    secret = kp.seed().decode()
+    add_fund_bot(public)
+    # Change the trust
+    change_trust(kp, KLTV, 100000000)
+    create_payment(kp_dist, public, 10000000, "hahshhs")
+    # Return it
+    return m, secret, public
