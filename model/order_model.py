@@ -137,7 +137,7 @@ def set_order_line(product_id : int, qty : float, order : Order, mnemonic):
     list_pub_petani = [c.petani.user.public_key for c in caps]
     add_signer_petani(list_escrow, list_pub_petani)
 
-    for i in range(list_escrow):
+    for i in range(len(list_escrow)):
         contract = Contract(
             escrow_pub = list_escrow[i][0],
             escrow_secret = list_escrow[i][1],
