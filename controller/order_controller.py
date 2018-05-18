@@ -70,3 +70,4 @@ class OrderController(Controller):
             raise Exception("Unexpected login status")
 
         return m.get_order_lines(user)
+
