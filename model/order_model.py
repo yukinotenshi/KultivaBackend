@@ -1,12 +1,14 @@
 from model.base_model import Order, OrderLine, Supplier, Customer, User, Product, Capabilities, ChatRoom
 from datetime import date, timedelta
 from operator import itemgetter
+from smart_contract.contract_kultiva import *
 
 def distance(lat1, lng1, lat2, lng2):
     x = lat1 - lat2
     y = lng1 - lng2
 
     return x**2 + y**2
+
 
 def calculate_distance(capabilites, lat : float, lng: float):
     result = []
@@ -40,7 +42,8 @@ def get_capabilities(id : int):
 
     return data
 
-def create_order(user : User, address :str, items):
+
+def create_order(user : User, address : str, items):
     #check balance
     #balance -= usage
 
@@ -48,6 +51,20 @@ def create_order(user : User, address :str, items):
         customer = c
         break
 
+    pub_key = user.public_key
+    balance = get_balance(pub_key)
+
+    price = 0
+    for item in items:
+        price += Product.get(Product.id == item['id']).harga * item['qty']
+
+    if balance < price:
+        raise Exception("Balance not sufficient")
+
+    '''
+    DO YOUR FUCKING BLOCKCHAIN THINGS HERE
+    ex. deduct balance, transfer to contract, etc/.
+    '''
     order = Order(
         customer = customer,
         address = address
@@ -80,7 +97,8 @@ def split_order(id : int, qty : float):
 
     return capable
 
-def set_order_line(product_id : int, qty : float, order : Order):
+
+def set_order_line(product_id : int, qty : float, order : Order, mnemonic):
     product = Product.get(Product.id == product_id)
     caps = split_order(product_id, qty)
 
@@ -95,12 +113,15 @@ def set_order_line(product_id : int, qty : float, order : Order):
     order_line.save()
     qty_left = qty
 
+    list_amount = []
+
     for c in caps:
         supplier = Supplier(
             order_line = order_line,
             petani = c.petani,
             qty = c.volume if c.volume < qty_left else qty_left
         )
+        list_amount.append(qty * product.harga)
         supplier.save()
         c.volume = c.volume - supplier.qty
         c.save()
@@ -109,6 +130,15 @@ def set_order_line(product_id : int, qty : float, order : Order):
         room.save()
 
         qty_left -= supplier.qty
+
+    # Phase 1 and 2
+    list_escrow = create_and_fund(mnemonic, len(caps), list_amount)
+    # Phase 3
+    # Set options signer petani
+    # Get public key petani
+    list_pub_petani = [c.petani.user.public_key for c in caps]
+    add_signer_petani(list_escrow, list_pub_petani)
+
 
 def get_order_lines(user: User):
     for p in user.petani:
@@ -134,4 +164,3 @@ def get_order_lines(user: User):
         })
 
     return data
-
