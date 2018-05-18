@@ -16,7 +16,8 @@ class OrderController(Controller):
         for item in self.items:
             m.set_order_line(
                 item["id"],
-                item["qty"], order
+                item["qty"], order,
+                self.mnemonic
             )
 
         return {
