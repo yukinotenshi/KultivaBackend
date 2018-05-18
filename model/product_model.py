@@ -25,11 +25,13 @@ def get_product_of_category(id : int):
     }
 
     for p in product:
+        capabilities = get_capabilities(p.id)
         data['products'].append({
             "id" : p.id,
             "name" : p.name,
             "unit" : p.unit,
-            "price" : p.harga
+            "price" : p.harga,
+            "stock" : capabilities["capacity"]
         })
 
     return data
