@@ -53,8 +53,8 @@ def get_product_detail(id: int):
 
     for c in capabilities['petani']:
         data['locations'].append({
-            "lat" : c.petani.lat,
-            "lng" : c.petani.lng
+            "lat" : c.lat,
+            "lng" : c.lng
         })
 
     return data
