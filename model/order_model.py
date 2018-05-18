@@ -1,4 +1,4 @@
-from model.base_model import Order, OrderLine, Supplier, Customer, User, Product, Capabilities
+from model.base_model import Order, OrderLine, Supplier, Customer, User, Product, Capabilities, ChatRoom
 from datetime import date, timedelta
 from operator import itemgetter
 
@@ -105,7 +105,33 @@ def set_order_line(product_id : int, qty : float, order : Order):
         c.volume = c.volume - supplier.qty
         c.save()
 
+        room = ChatRoom(petani = c.petani, customer=order.customer)
+        room.save()
+
         qty_left -= supplier.qty
 
+def get_order_lines(user: User):
+    for p in user.petani:
+        petani = p
+        break
 
+    supplied = Supplier.select().where(Supplier.petani == petani)
+    data = {
+        "order_lines" : []
+    }
+    for s in supplied:
+        order_line = s.order_line
+        data["order_lines"].append({
+            "id" : order_line.id,
+            "customer" : {
+                "id" : order_line.order.customer.id,
+                "first_name" : order_line.order.customer.first_name,
+                "last_name" : order_line.order.customer.last_name,
+                "address" : order_line.order.address
+            },
+            "qty" : s.qty,
+            "status" : s.status
+        })
+
+    return data
 

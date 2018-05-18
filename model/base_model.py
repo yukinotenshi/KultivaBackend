@@ -124,6 +124,8 @@ class Chat(BaseModel):
     chat_room = pw.ForeignKeyField(ChatRoom, related_name="chats")
     from_user = pw.ForeignKeyField(User, related_name="chats")
     to_user = pw.ForeignKeyField(User, related_name="chats")
+    tipe = pw.CharField()
+    msg = pw.CharField()
 
     class Meta:
         db_table = "chat"

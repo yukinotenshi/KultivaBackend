@@ -62,3 +62,11 @@ class OrderController(Controller):
                     })
 
         return data
+
+
+    def get_orderline_petani(self):
+        user = self.is_logged_in()
+        if not user:
+            raise Exception("Unexpected login status")
+
+        return m.get_order_lines(user)
