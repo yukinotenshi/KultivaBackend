@@ -63,4 +63,4 @@ def get_balance(pub_key):
     _address = Address(address=pub_key)
     _address.get()
     print(_address.balances)
-    return int(_address.balances[0]['balance'])
+    return int(float(_address.balances[0]['balance']))
