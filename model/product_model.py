@@ -29,6 +29,7 @@ def get_product_of_category(id : int):
         data['products'].append({
             "id" : p.id,
             "name" : p.name,
+            "image" : p.image,
             "unit" : p.unit,
             "price" : p.harga,
             "stock" : capabilities["capacity"]
@@ -43,6 +44,7 @@ def get_product_detail(id: int):
     data = {
         "id" : product.id,
         "name" : product.name,
+        "image" : product.image,
         "unit" : product.unit,
         "price" : product.harga,
         "stock" : capabilities["capacity"],
