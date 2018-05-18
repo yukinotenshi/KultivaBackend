@@ -1,4 +1,5 @@
 from model.base_model import Product, Category, Capabilities
+from model.order_model import get_capabilities
 
 def get_all_category():
     category = Category.select()
@@ -35,18 +36,18 @@ def get_product_of_category(id : int):
 
 def get_product_detail(id: int):
     product = Product.get(Product.id == id)
+    capabilities = get_capabilities(id)
 
     data = {
         "id" : product.id,
         "name" : product.name,
         "unit" : product.unit,
         "price" : product.harga,
+        "stock" : capabilities["capacity"],
         "locations" : []
     }
 
-    capabilities = Capabilities.select().where(Capabilities.product == product)
-
-    for c in capabilities:
+    for c in capabilities['petani']:
         data['locations'].append({
             "lat" : c.petani.lat,
             "lng" : c.petani.lng

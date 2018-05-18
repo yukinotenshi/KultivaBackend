@@ -5,7 +5,7 @@ db.create_tables([
     User, Session,
     Petani, Customer,
     Capabilities, Product,
-    Order, Supplier,
+    Order, OrderLine, Supplier,
     ChatRoom, Chat, Category
 ])
 

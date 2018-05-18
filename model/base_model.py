@@ -76,15 +76,23 @@ class Product(BaseModel):
 class Order(BaseModel):
     customer = pw.ForeignKeyField(Customer, related_name="order")
     address = pw.CharField()
-    product = pw.ForeignKeyField(Product, related_name="order")
-    total_qty = pw.FloatField()
 
     class Meta:
         db_table = "order"
 
 
+class OrderLine(BaseModel):
+    order = pw.ForeignKeyField(Order, related_name="order_line")
+    product = pw.ForeignKeyField(Product, related_name="order_line")
+    status = pw.IntegerField(default=0)
+    total_qty = pw.FloatField()
+
+    class Meta:
+        db_table="order_line"
+
+
 class Supplier(BaseModel):
-    order = pw.ForeignKeyField(Order, related_name="supplier")
+    order_line = pw.ForeignKeyField(OrderLine, related_name="supplier")
     petani = pw.ForeignKeyField(Petani, related_name="supplier")
     qty = pw.FloatField()
 
