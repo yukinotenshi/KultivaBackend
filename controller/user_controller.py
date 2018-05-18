@@ -1,6 +1,6 @@
 from controller.base_controller import Controller
 from model.user_model import login_petani, login_customer, register_customer, register_petani, edit_profile_customer, edit_profile_petani
-from smart_contract.account_kultiva import create_account
+from smart_contract.account_kultiva import create_account, get_balance
 
 class UserController(Controller):
     def login_status(self):
@@ -183,6 +183,18 @@ class UserController(Controller):
             "last_name" : user.last_name,
             "profile_pic" : user.profile_pic,
             "phone" : petani.phone
+        }
+
+        return data
+
+    def balance(self):
+        user = self.is_logged_in()
+
+        if not user:
+            raise Exception("Unexpected login status")
+
+        data = {
+            "balance" : get_balance(user.public_key)
         }
 
         return data
