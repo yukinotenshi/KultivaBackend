@@ -78,6 +78,7 @@ def escrow_fund(user, list_escrow, list_amount):
             'asset': KLTV,
             'amount': str(list_amount[i])
         })
+        print(str(list_amount[i]))
         list_fund.append(payment)
     # Memo
     msg = TextMemo('Add fund to escrow')
