@@ -1,6 +1,7 @@
 from controller.base_controller import Controller
 from model.user_model import login_petani, login_customer, register_customer, register_petani, edit_profile_customer, edit_profile_petani
-from smart_contract.account_kultiva import create_account, get_balance
+from smart_contract.account_kultiva import get_balance
+from smart_contract.transaction_kultiva import create_account
 
 class UserController(Controller):
     def login_status(self):
