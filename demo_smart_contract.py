@@ -3,14 +3,14 @@ from smart_contract.account_kultiva import *
 
 print("Acc 1")
 acc1 = create_account()
-'''print("Acc 2")
+print("Acc 2")
 acc2 = create_account()
 print("Acc 3")
-acc3 = create_account()'''
+acc3 = create_account()
 
 get_balance(acc1[2])
 
-'''kp_acc1 = Keypair.deterministic(acc1[0])
+kp_acc1 = Keypair.deterministic(acc1[0])
 kp_acc2 = Keypair.deterministic(acc2[0])
 kp_acc3 = Keypair.deterministic(acc3[0])
 
@@ -43,4 +43,4 @@ create_payment(kp_acc3, DIST_PUB, 20, 'Refund to Kultiva')
 print("Bonus")
 merge_account(kp_acc1, DIST_PUB)
 merge_account(kp_acc2, DIST_PUB)
-merge_account(kp_acc3, DIST_PUB)'''
+merge_account(kp_acc3, DIST_PUB)

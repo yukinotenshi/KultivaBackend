@@ -193,6 +193,6 @@ def create_account():
     add_fund_bot(public)
     # Change the trust
     change_trust(kp, KLTV, 100000000)
-    create_payment(kp_dist, public, 10000000, "hahshhs")
+    create_payment(kp_dist, public, 50000, "hahshhs")
     # Return it
     return m, secret, public
