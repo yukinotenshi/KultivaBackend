@@ -61,6 +61,9 @@ class OrderController(Controller):
                 for s in supplier:
                     data["orders"][-1]["order_lines"][-1]["supplier"].append({
                         "petani_id" : s.petani.id,
+                        "supplier_id" : s.id,
+                        "qty" : s.qty,
+                        "price" : s.qty * ol.product.harga,
                         "lat" : s.petani.lat,
                         "lng" : s.petani.lng
                     })
@@ -111,3 +114,8 @@ class OrderController(Controller):
         remove_escrow(keypair_escrow, DIST_PUB)
 
         contract.delete_instance()
+
+        return {
+            "status" : "success",
+            "id" : self.id
+        }
