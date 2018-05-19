@@ -117,5 +117,5 @@ class OrderController(Controller):
 
         return {
             "status" : "success",
-            "id" : self.id
+            "id" : self.petani_id
         }
